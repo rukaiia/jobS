@@ -32,7 +32,7 @@ public interface ResumeService {
 
     void changeResume(InputResumeDto resume, InputContactInfoDto contacts);
 
-    void getResume(int id, Model model);
+    Object getResume(int id, Model model);
 
     List<ResumeDto> getResumesWithPaging(Integer page, Integer pageSize);
 

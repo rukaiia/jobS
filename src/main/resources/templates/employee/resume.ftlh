@@ -4,7 +4,7 @@
 
     <div class="card text-center mb-4">
         <div class="card-header">
-            <h1>${resumes.name}</h1>
+            <h1>${resume.name}</h1>
         </div>
         <div class="card-body">
 

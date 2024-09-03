@@ -13,6 +13,12 @@
             <input type="password" name="password" id="form2Example2" class="form-control"/>
             <label class="form-label" for="form2Example2">Password</label>
         </div>
+        <div class="row mb-4">
+            <div class="col">
+                <a href="/users/forgot_password">Forgot password</a>
+            </div>
+        </div>
+
 
         <div class="d-grid gap-2">
             <button type="submit" class="btn bg-success border p-2 text-dark bg-opacity-10 rounded-3 mb-4">Логин

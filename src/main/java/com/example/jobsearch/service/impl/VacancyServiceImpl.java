@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public List<VacancyDto> getVacancies() {
+    public List<VacancyDto> getVacancies(Pageable pageable) {
         List<Vacancy> vacancies = vacancyRepository.findAll();
         return getVacancyDtos(vacancies);
     }

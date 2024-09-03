@@ -26,11 +26,16 @@ public class MainController {
     public String getMainPage(Model model,
                               @RequestParam(name = "vacancyPage", defaultValue = "0") Integer vacancyPage,
                               @RequestParam(name = "vacancyPageSize", defaultValue = "5") Integer vacancyPageSize,
-                              @RequestParam(name = "filter", defaultValue = "none") String category,
+                              @RequestParam(name = "filter", defaultValue = "none") String Vcategory,
                               @RequestParam(name = "resumePage", defaultValue = "0") Integer resumePage,
-                              @RequestParam(name = "resumePageSize", defaultValue = "5") Integer resumePageSize) {
+                              @RequestParam(name = "resumePageSize", defaultValue = "5") Integer resumePageSize,
+                              @RequestParam(name = "filter", defaultValue = "none") String Rcategory,
+                              @RequestParam(name = "userPage", defaultValue = "0") Integer userPage,
+                              @RequestParam(name = "userPageSize", defaultValue = "5") Integer userPageSize)
 
-        model.addAttribute("vacancies", vacancyService.getVacanciesWithPaging(vacancyPage, vacancyPageSize, category));
+    {
+
+        model.addAttribute("vacancies", vacancyService.getVacanciesWithPaging(vacancyPage, vacancyPageSize, Vcategory));
         model.addAttribute("vacancyPage", vacancyPage);
         model.addAttribute("vacancyPageSize", vacancyPageSize);
 
@@ -38,9 +43,12 @@ public class MainController {
         model.addAttribute("categories", categoryService.getAllCategories());
 
 
-        model.addAttribute("resumes", resumeService.getResumesWithPaging(resumePage, resumePageSize));
+        model.addAttribute("resumes", resumeService.getResumesWithPaging(resumePage,resumePageSize));
         model.addAttribute("resumePage", resumePage);
         model.addAttribute("resumePageSize", resumePageSize);
+
+        model.addAttribute("user", userService.getUsers());
+
 
         return "main";
     }
@@ -59,7 +67,12 @@ public class MainController {
 
     @GetMapping("resumes/{id}")
     public String getResume(@PathVariable int id, Model model) {
-        resumeService.getResume(id, model);
+        resumeService.getResume(id,model);
         return "employer/resumes";
     }
+//    @GetMapping("/resumes")
+//    public String getResumes(Model model){
+//        model.addAttribute("resumes" , resumeService.getResumes());
+//        return "employer/resumes";
+//    }
 }

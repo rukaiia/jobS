@@ -77,8 +77,9 @@
         <div class="my-4">
             <#if user.accountType == "EMPLOYEE">
                 <h2>Резюме:</h2>
-            <#else>
-                <h2>Созданные вакансии:</h2>
+
+
+                <h3>Созданные вакансии:</h3>
             </#if>
             <#if userMainItems??>
                 <div class="row row-cols-1 row-cols-lg-3 g-4 mt-1">

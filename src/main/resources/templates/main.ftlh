@@ -47,8 +47,43 @@
                 </div>
             </div>
         </#list>
+
     </div>
 
+
+<#--    <h1 class="text-center text-danger mb-1">Резюме:</h1>-->
+
+<#--    <div class="dropdown d-flex justify-content-center mb-2">-->
+<#--        <button class="btn btn-offset-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"-->
+<#--                aria-expanded="false">-->
+<#--            Выберите категорию-->
+<#--        </button>-->
+<#--        <ul class="dropdown-menu">-->
+<#--            <li><a class="dropdown-item" href="/">none</a></li>-->
+<#--            <#list resumes as resume>-->
+<#--                <li><a class="dropdown-item" href="?filter=${resume.name}">${resume.name}</a></li>-->
+<#--            </#list>-->
+<#--        </ul>-->
+<#--    </div>-->
+<#--    <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">-->
+<#--        <#list resumes as resume>-->
+<#--            <div class="col">-->
+<#--                <div class="card h-100">-->
+<#--                    <div class="card-body">-->
+<#--                        <a href="employer/resumes/${resume.id}"><h3 class="card-title mb-4">${resume.name}</h3></a>-->
+
+<#--                        <#if resume.userEmail??>-->
+<#--                            <h6 class="card-text">${resume.userEmail}</h6>-->
+<#--                        </#if>-->
+<#--                        <h6 class="card-title">${resume.salary}</h6>-->
+<#--                    </div>-->
+<#--                    <div class="card-footer">-->
+<#--                        <small class="text-body-secondary">Дата обновления ${resume.updateTime.toLocalDate()}</small>-->
+<#--                    </div>-->
+<#--                </div>-->
+<#--            </div>-->
+<#--        </#list>-->
+<#--    </div>-->
     <nav aria-label="Page navigation example" class="d-flex my-4 justify-content-center">
         <ul class="pagination">
             <li class="page-item">
@@ -66,5 +101,6 @@
             </li>
         </ul>
     </nav>
+
 
 </@main.layout>
