@@ -1,5 +1,6 @@
 package com.example.jobsearch.config;
 
+import com.example.jobsearch.handler.MySimpleUrlAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+public final MySimpleUrlAuthenticationSuccessHandler mySimpleUrlAuthenticationSuccessHandler;
     private static final String USER_QUERY = "select email, password, enabled from USERS where email = ?;";
     private static final String AUTHORITIES_QUERY = "select email, account_type from USERS where email = ?;";
     private final DataSource dataSource;
@@ -43,8 +44,10 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/api/auth/login")
-                        .defaultSuccessUrl("/")
+
                         .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/")
+                        .successHandler(myAuthenticationSuccessHandler())
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -52,13 +55,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
                                 authorize
-                                        .requestMatchers("/").permitAll()
-//                                .requestMatchers("/users/login").permitAll()
+
+                                .requestMatchers("/users/forgot_password").permitAll()
                                         .requestMatchers("/users/register").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
 //                                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                                         .requestMatchers("/vacancies/*/").permitAll()
-                                        .requestMatchers("/resumes/*/").hasAuthority("EMPLOYER")
+                                        .requestMatchers("/resumes/**").hasAuthority("EMPLOYER")
                                         .requestMatchers("/resume/").hasAuthority("EMPLOYEE")
                                         .requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
                                         .requestMatchers("/employer/**").hasAuthority("EMPLOYER")
@@ -70,4 +73,12 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        return new MySimpleUrlAuthenticationSuccessHandler();
+    }
+
+
+
 }

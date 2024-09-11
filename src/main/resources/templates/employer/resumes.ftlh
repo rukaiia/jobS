@@ -1,24 +1,24 @@
-<#import  "../layout.ftlh" as main>
+<#import '../layout.ftlh' as main>
 <@main.layout>
 
     <h1 class="text-center text-danger mb-3">Резюме:</h1>
 
     <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-        <#list resumes as resume>
+
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
-                        <a href="/employer/resumes/${resume.id}"><h3 class="card-title mb-4">${resume.name}</h3></a>
+                        <#list resumes as resume>
+                            <a href="employer/resumes/${resume.id}"><h3 class="card-title mb-4">${resume.name}</h3></a>
+<#--                        <#if resume.category??>-->
+<#--                            <#if resume.category.parent??>-->
+<#--                                <h6 class="card-title">Родительская категория: ${resume.category.parent}</h6>-->
+<#--                            </#if>-->
 
-                        <#if resume.category??>
-                            <#if resume.category.parent??>
-                                <h6 class="card-title">Родительская категория: ${resume.category.parent}</h6>
-                            </#if>
-
-                            <#if resume.category.name??>
-                                <h6 class="card-title">Категория: ${resume.category.name}</h6>
-                            </#if>
-                        </#if>
+<#--                            <#if resume.category.name??>-->
+<#--                                <h6 class="card-title">Категория: ${resume.category.name}</h6>-->
+<#--                            </#if>-->
+<#--                        </#if>-->
 
                         <h6 class="card-title">${resume.userEmail}</h6>
 
@@ -31,9 +31,13 @@
                     <div class="card-footer">
                         <small class="text-body-secondary">Дата обновления ${resume.updateTime.toLocalDate()}</small>
                     </div>
+                        </#list>
+
+
+
                 </div>
             </div>
-        </#list>
+
     </div>
 
     <nav aria-label="Page navigation example" class="d-flex my-4 justify-content-center">

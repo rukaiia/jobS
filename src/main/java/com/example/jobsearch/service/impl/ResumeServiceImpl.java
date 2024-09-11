@@ -38,13 +38,13 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public List<ResumeDto> getResumes() {
         List<Resume> resumes = repository.findAll();
-        return getResumeDtos(resumes);
+        return resumes.stream().map(this::convertToModel).toList();
     }
 
     @Override
     public List<ResumeDto> getActiveResumes() {
         List<Resume> resumes = repository.findAllByIsActiveTrue();
-        return getResumeDtos(resumes);
+        return resumes.stream().map(this::convertToModel).toList();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ResumeServiceImpl implements ResumeService {
     public List<ResumeDto> getResumesByCategory(String category) {
         List<Resume> resumes = repository.findAllByCategoryNameAndIsActiveTrue(category);
         if (!resumes.isEmpty()) {
-            return getResumeDtos(resumes);
+            return resumes.stream().map(this::convertToModel).toList();
         }
         throw new ResumeNotFoundException("Can not find resume with category: " + category);
     }
@@ -78,7 +78,7 @@ public class ResumeServiceImpl implements ResumeService {
     public List<ResumeDto> getResumesByUserId(int id) {
         List<Resume> resumes = repository.findAllByUserIdAndIsActiveTrue(id);
         if (!resumes.isEmpty()) {
-            return getResumeDtos(resumes);
+            return resumes.stream().map(this::convertToModel).toList();
         }
         throw new ResumeNotFoundException("Can not find resume with user id: " + id);
     }
@@ -103,29 +103,46 @@ public class ResumeServiceImpl implements ResumeService {
 
         List<Resume> resumes = repository.findPagedResumes(pageSize, offset);
 
-        return getResumeDtos(resumes);
+        return resumes.stream().map(this::convertToModel).toList();
     }
 
+
+    private ResumeDto convertToModel(Resume resume){
+        return  ResumeDto.builder()
+                .id(resume.getId())
+                .userEmail(resume.getUser().getEmail())
+                .name(resume.getName())
+                .category(categoryService.getCategoryById(resume.getCategory().getId()))
+                .salary(resume.getSalary())
+                .contacts(contactsInfoService.getContactInfoByResumeId(resume.getId()))
+                .workExperienceInfoDtos(workExperienceInfoService.WorkExperienceInfoById(resume.getId()))
+                .educationInfos(educationInfoService.getEducationInfoById(resume.getId()))
+                .isActive(resume.getIsActive())
+                .createdDate(resume.getCreatedDate())
+                .updateTime(resume.getUpdateTime())
+                .build();
+
+    }
 
     // Служебный метод
-    private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
-        List<ResumeDto> dtos = new ArrayList<>();
-        resumes.forEach(e -> dtos.add(ResumeDto.builder()
-                .id(e.getId())
-                .userEmail(e.getUser().getEmail())
-                .name(e.getName())
-                .category(categoryService.getCategoryById(e.getCategory().getId()))
-                .salary(e.getSalary())
-                .contacts(contactsInfoService.getContactInfoByResumeId(e.getId()))
-                .workExperienceInfoDtos(workExperienceInfoService.WorkExperienceInfoById(e.getId()))
-                .educationInfos(educationInfoService.getEducationInfoById(e.getId()))
-                .isActive(e.getIsActive())
-                .createdDate(e.getCreatedDate())
-                .updateTime(e.getUpdateTime())
-                .build()));
-
-        return dtos;
-    }
+//    private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
+//        List<ResumeDto> dtos = new ArrayList<>();
+//        resumes.forEach(e -> dtos.add(ResumeDto.builder()
+//                .id(e.getId())
+//                .userEmail(e.getUser().getEmail())
+//                .name(e.getName())
+//                .category(categoryService.getCategoryById(e.getCategory().getId()))
+//                .salary(e.getSalary())
+//                .contacts(contactsInfoService.getContactInfoByResumeId(e.getId()))
+//                .workExperienceInfoDtos(workExperienceInfoService.WorkExperienceInfoById(e.getId()))
+//                .educationInfos(educationInfoService.getEducationInfoById(e.getId()))
+//                .isActive(e.getIsActive())
+//                .createdDate(e.getCreatedDate())
+//                .updateTime(e.getUpdateTime())
+//                .build()));
+//
+//        return dtos;
+//    }
 
     // Служебный метод
     @Override
@@ -224,7 +241,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public void getResume(int id, Model model) {
+    public Object getResume(int id, Model model) {
         UserDto authUser = authenticatedUserProvider.getAuthUser();
 
         ResumeDto resumeDto = getResumeById(id);
@@ -234,5 +251,6 @@ public class ResumeServiceImpl implements ResumeService {
         } else {
             throw new ResumeNotFoundException("Несоответствие юзера и юзера в резюме");
         }
+        return null;
     }
 }

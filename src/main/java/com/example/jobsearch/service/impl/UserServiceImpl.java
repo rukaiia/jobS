@@ -1,11 +1,16 @@
+
 package com.example.jobsearch.service.impl;
 
+import com.example.jobsearch.common.Utilities;
 import com.example.jobsearch.dto.user.*;
 import com.example.jobsearch.exception.UserNotFoundException;
 import com.example.jobsearch.model.User;
 import com.example.jobsearch.repository.UserRepository;
+import com.example.jobsearch.service.EmailService;
 import com.example.jobsearch.service.UserService;
 import com.example.jobsearch.util.FileUtil;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,19 +19,91 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final EmailService emailService;
+    private final PasswordEncoder encoder;
+    @Override
+    public Map<String, Object> forgotPassword(HttpServletRequest request) {
+        Map<String, Object> model = new HashMap<>();
+        try {
+            makeResetPasswordLink(request);
+            model.put("message", "we have sent reset password link to your email. Please check.");
+        } catch (UsernameNotFoundException | UnsupportedEncodingException e) {
+            model.put("error", e.getMessage());
+        } catch (MessagingException e) {
+            model.put("error", "Error while sending reset password link to your email.");
+        }
+        return model;
+    }
+
+    @Override
+    public Map<String, Object> resetPasswordGet(String token) {
+        Map<String, Object> model = new HashMap<>();
+        try {
+            getByToken(token);
+            model.put("token", token);
+        } catch (UsernameNotFoundException e) {
+            model.put("error", "Invalid token");
+        }
+        return model;
+    }
+
+    @Override
+    public Map<String, Object> resetPasswordPost(HttpServletRequest request) {
+        Map<String, Object> model = new HashMap<>();
+        String token = request.getParameter("token");
+        String password = request.getParameter("password");
+
+        try {
+            User user = getByToken(token);
+            updatePassword(user, password);
+            model.put("message", "You have successfully changed your password.");
+        } catch (UsernameNotFoundException e) {
+            model.put("message", "Invalid token");
+        }
+        return model;
+    }
+
+    private void makeResetPasswordLink(HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateToken(token, email);
+
+        String resetPasswordLink = Utilities.getSiteUrl(request) + "/users/reset_password?token=" + token;
+        emailService.sendMail(email, resetPasswordLink);
+    }
+
+    private User getByToken(String token) {
+        return userRepository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private void updatePassword(User user, String password) {
+        String encodedPassword = encoder.encode(password);
+        user.setPassword(encodedPassword);
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
+    }
+
+    private void updateToken(String token, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Could not find any user with the email: " + email));
+        user.setResetPasswordToken(token);
+        userRepository.save(user);
+    }
+
+
 
     private final UserRepository userRepository;
     private final FileUtil fileUtil;
@@ -164,6 +241,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isEmployee(String userEmail) {
         return "EMPLOYEE".equalsIgnoreCase(getUserByEmail(userEmail).getAccountType());
+    }
+    @Override
+    public Boolean isEmployer(String userEmail) {
+        return "EMPLOYER".equalsIgnoreCase(getUserByEmail(userEmail).getAccountType());
+    }
+
+    @Override
+    public Boolean isEmployer(int userId) {
+        return "EMPLOYER".equalsIgnoreCase(getUserById(userId).getAccountType());
     }
 
     @Override

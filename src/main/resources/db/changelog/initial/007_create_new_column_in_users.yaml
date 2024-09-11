@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: Add column reset_password_token for table USR
+      author: Rukaiia
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: reset_password_token
+                  type: varchar(255)
