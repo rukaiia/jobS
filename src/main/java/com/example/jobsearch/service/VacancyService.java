@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface VacancyService {
@@ -15,7 +16,7 @@ public interface VacancyService {
 
     UserDto getUserByVacancy(int vacancyId);
 
-    List<VacancyDto> getVacancies();
+    List<VacancyDto> getVacancies(Pageable pageable);
 
     List<VacancyDto> getActiveVacancies();
 

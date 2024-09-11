@@ -1,6 +1,7 @@
 package com.example.jobsearch.repository;
 
 import com.example.jobsearch.model.Resume;
+import io.micrometer.common.lang.NonNullApi;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ResumeRepository extends JpaRepository<Resume, Integer> {
@@ -19,6 +21,8 @@ public interface ResumeRepository extends JpaRepository<Resume, Integer> {
     List<Resume> findAllByUserIdAndIsActiveTrue(Integer id);
 
     Boolean existsByUserId(Integer userId);
+
+    Optional<Resume> findById(Integer integer);
 
     Integer countAllByIsActiveTrue();
 

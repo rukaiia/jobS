@@ -2,6 +2,7 @@ package com.example.jobsearch.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class User {
     private String phoneNumber;
 
     private String avatar;
-
+    private String resetPasswordToken;
     @Column(name = "account_type")
     private String accountType;
 
@@ -40,4 +41,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Message> messages;
+
+
 }
