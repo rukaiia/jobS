@@ -1,32 +1,32 @@
 
 <#import  "layout.ftlh" as main>
-<@main.layout>
+<@main.layout;spring>
 
     <form action="/api/auth/login" method="post" class="mx-auto w-25 mt-5" id="form">
 
         <div class="form-outline mb-4">
             <input type="email" name="username" id="form2Example1" class="form-control"/>
-            <label class="form-label" for="form2Example1">Email address</label>
+            <label class="form-label" for="form2Example1"> <@spring.message "login.email"/></label>
         </div>
 
         <div class="form-outline mb-4">
             <input type="password" name="password" id="form2Example2" class="form-control"/>
-            <label class="form-label" for="form2Example2">Password</label>
+            <label class="form-label" for="form2Example2"><@spring.message "login.password"/></label>
         </div>
         <div class="row mb-4">
             <div class="col">
-                <a href="/users/forgot_password">Forgot password</a>
+                <a href="/users/forgot_password"><@spring.message "login.forgot_password"/></a>
             </div>
         </div>
 
 
         <div class="d-grid gap-2">
-            <button type="submit" class="btn bg-success border p-2 text-dark bg-opacity-10 rounded-3 mb-4">Логин
+            <button type="submit" class="btn bg-success border p-2 text-dark bg-opacity-10 rounded-3 mb-4"><@spring.message "login.login"/>
             </button>
         </div>
 
         <div class="text-center">
-            <p>Нет аккаунта? <a href="/users/register">Зарегистрироваться</a></p>
+            <p> <a href="/users/register"><@spring.message "login.register"/></a></p>
         </div>
 
     </form>

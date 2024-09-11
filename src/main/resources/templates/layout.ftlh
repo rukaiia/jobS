@@ -1,4 +1,4 @@
-
+<#import  "spring.ftl" as spring>
 <#macro layout>
 
     <!doctype html>
@@ -29,22 +29,34 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <li>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <@spring.message "layout.lang"/>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="?lang=en"> <@spring.message "layout.lang3"/></a></li>
+                        <li><a class="dropdown-item" href="?lang=ru"> <@spring.message "layout.lang2"/></a></li>
+                        <li><a class="dropdown-item" href="?lang=ky"> <@spring.message "layout.lang4"/></a></li>
+                    </ul>
+                </div>
+            </li>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav d-flex flex-fill">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/users/profile">Profile</a>
+                        <a class="nav-link active" aria-current="page" href="/users/profile"><@spring.message "layout.profile"/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/employee/resumes/1/vacancy/2">Messages(Test)</a>
+                        <a class="nav-link active" aria-current="page" href="/employee/resumes/1/vacancy/2"><@spring.message "layout.messages"/></a>
                     </li>
                     <li class="nav-item ms-lg-auto">
-                        <a class="nav-link active" href="/login">Login</a>
+                        <a class="nav-link active" href="/login"><@spring.message "layout.login"/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/users/register">Register</a>
+                        <a class="nav-link active" href="/users/register"><@spring.message "layout.register"/></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/logout">Logout</a>
+                        <a class="nav-link active" href="/logout"><@spring.message "layout.logout"/></a>
                     </li>
                 </ul>
             </div>
@@ -52,7 +64,9 @@
     </nav>
 
     <div class="container">
-        <#nested >
+
+        <#nested spring>
+
     </div>
 
     </body>
