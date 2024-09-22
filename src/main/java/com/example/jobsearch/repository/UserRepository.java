@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-
+    Optional<User> findByResetPasswordToken(String token);
     @Query("select u from User u where u.name = :name")
     List<User> findUserByName(String name);
 
@@ -53,4 +53,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             where id = :id;
             """, nativeQuery = true)
     void updateAvatar(String avatar, Integer id);
+
+
+    Optional<User> findByEmail(String email);
 }

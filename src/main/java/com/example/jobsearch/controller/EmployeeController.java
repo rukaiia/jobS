@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -25,9 +26,15 @@ public class EmployeeController {
     private final ProfileService profileService;
     private final RespondedApplicantsService respondedApplicantsService;
 
+
+//    @GetMapping("resumes/{id}")
+//    public String getResume(@PathVariable int id, Model model) {
+//        resumeService.getResume(id, model);
+//        return "employee/resume";
+//    }
     @GetMapping("resumes/{id}")
-    public String getResume(@PathVariable int id, Model model) {
-        resumeService.getResume(id, model);
+            public String getResume(@PathVariable int id, Model model){
+        model.addAttribute("resume", resumeService.getResume(id, model));
         return "employee/resume";
     }
 

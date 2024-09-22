@@ -1,7 +1,6 @@
 'use strict'
 window.addEventListener('load', () => {
-    // Тестовый ввод ендпоинта хардкодом, потом исправить,
-    // Добавлял сообщения от работодателя через в базу
+
     const base_url = 'http://localhost:8089/api/messages/1';
     let messages = document.getElementById('messages');
     let oldData = [];
@@ -68,7 +67,6 @@ window.addEventListener('load', () => {
     }
 
 
-    // Найти способ вызвать fetchAuthorized из login.js
     async function fetchAuthorized(url, user) {
 
         let headers = new Headers()
