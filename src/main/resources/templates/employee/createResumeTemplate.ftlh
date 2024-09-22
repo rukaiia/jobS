@@ -124,6 +124,6 @@
     </form>
 </div>
 
-<script src="/static/js/resumeCreation.js"></script>
+<script src="/static/js/resumeNew.js"></script>
 
 </@main.layout>
