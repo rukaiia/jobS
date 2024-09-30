@@ -1,3 +1,4 @@
+
 <#import  "layout.ftlh" as main>
 <#import  "spring.ftl" as spring>
 <@main.layout>
@@ -68,6 +69,8 @@
             </li>
         </ul>
     </nav>
+    <script src="/static/js/vacancyFilter.js">
+    </script>
 
 
 </@main.layout>
