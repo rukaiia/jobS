@@ -27,5 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (window.location.search !== "?filter=" + filter) {
             window.location.href = "?filter=" + filter;
         }
+
+
     }
 });

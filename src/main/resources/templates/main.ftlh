@@ -69,8 +69,7 @@
             </li>
         </ul>
     </nav>
-    <script src="/static/js/vacancyFilter.js">
-    </script>
+    <script src="/static/js/vacancyFilter.js"></script>
 
 
 </@main.layout>
