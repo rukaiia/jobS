@@ -56,7 +56,7 @@ public final MySimpleUrlAuthenticationSuccessHandler mySimpleUrlAuthenticationSu
                 .authorizeHttpRequests(authorize ->
                                 authorize
 
-                                .requestMatchers("/users/forgot_password").permitAll()
+                                .requestMatchers("/users/forgot_password", "/users/reset_password").permitAll()
                                         .requestMatchers("/users/register").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
 //                                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()

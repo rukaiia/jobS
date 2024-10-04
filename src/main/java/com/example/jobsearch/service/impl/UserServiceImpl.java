@@ -1,7 +1,6 @@
 
 package com.example.jobsearch.service.impl;
 
-import com.example.jobsearch.common.Utilities;
 import com.example.jobsearch.dto.user.*;
 import com.example.jobsearch.exception.UserNotFoundException;
 import com.example.jobsearch.model.User;
@@ -9,7 +8,6 @@ import com.example.jobsearch.repository.UserRepository;
 import com.example.jobsearch.service.EmailService;
 import com.example.jobsearch.service.UserService;
 import com.example.jobsearch.util.FileUtil;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -24,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Slf4j
@@ -33,75 +30,150 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final PasswordEncoder encoder;
+//    @Override
+//    public Map<String, Object> forgotPassword(HttpServletRequest request) {
+//        Map<String, Object> model = new HashMap<>();
+//        try {
+//            makeResetPasswordLink(request);
+//            model.put("message", "we have sent reset password link to your email. Please check.");
+//        } catch (UsernameNotFoundException | UnsupportedEncodingException e) {
+//            model.put("error", e.getMessage());
+//        } catch (MessagingException e) {
+//            model.put("error", "Error while sending reset password link to your email.");
+//        }
+//        return model;
+//    }
+//
+//    @Override
+//    public Map<String, Object> resetPasswordGet(String token) {
+//        Map<String, Object> model = new HashMap<>();
+//        try {
+//            getByToken(token);
+//            model.put("token", token);
+//        } catch (UsernameNotFoundException e) {
+//            model.put("error", "Invalid token");
+//        }
+//        return model;
+//    }
+//
+//    @Override
+//    public Map<String, Object> resetPasswordPost(HttpServletRequest request) {
+//        Map<String, Object> model = new HashMap<>();
+//        String token = request.getParameter("token");
+//        String password = request.getParameter("password");
+//
+//        try {
+//            User user = getByToken(token);
+//            updatePassword(user, password);
+//            model.put("message", "You have successfully changed your password.");
+//        } catch (UsernameNotFoundException e) {
+//            model.put("message", "Invalid token");
+//        }
+//        return model;
+//    }
+//
+//    private void makeResetPasswordLink(HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+//        String email = request.getParameter("email");
+//        String token = UUID.randomUUID().toString();
+//        updateToken(token, email);
+//
+//        String resetPasswordLink = Utilities.getSiteUrl(request) + "/users/reset_password?token=" + token;
+//        emailService.sendMail(email, resetPasswordLink);
+//    }
+//
     @Override
-    public Map<String, Object> forgotPassword(HttpServletRequest request) {
-        Map<String, Object> model = new HashMap<>();
-        try {
-            makeResetPasswordLink(request);
-            model.put("message", "we have sent reset password link to your email. Please check.");
-        } catch (UsernameNotFoundException | UnsupportedEncodingException e) {
-            model.put("error", e.getMessage());
-        } catch (MessagingException e) {
-            model.put("error", "Error while sending reset password link to your email.");
-        }
-        return model;
-    }
-
-    @Override
-    public Map<String, Object> resetPasswordGet(String token) {
-        Map<String, Object> model = new HashMap<>();
-        try {
-            getByToken(token);
-            model.put("token", token);
-        } catch (UsernameNotFoundException e) {
-            model.put("error", "Invalid token");
-        }
-        return model;
-    }
-
-    @Override
-    public Map<String, Object> resetPasswordPost(HttpServletRequest request) {
-        Map<String, Object> model = new HashMap<>();
-        String token = request.getParameter("token");
-        String password = request.getParameter("password");
-
-        try {
-            User user = getByToken(token);
-            updatePassword(user, password);
-            model.put("message", "You have successfully changed your password.");
-        } catch (UsernameNotFoundException e) {
-            model.put("message", "Invalid token");
-        }
-        return model;
-    }
-
-    private void makeResetPasswordLink(HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-        String email = request.getParameter("email");
-        String token = UUID.randomUUID().toString();
-        updateToken(token, email);
-
-        String resetPasswordLink = Utilities.getSiteUrl(request) + "/users/reset_password?token=" + token;
-        emailService.sendMail(email, resetPasswordLink);
-    }
-
-    private User getByToken(String token) {
+    public User getByToken(String token) {
         return userRepository.findByResetPasswordToken(token)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    private void updatePassword(User user, String password) {
-        String encodedPassword = encoder.encode(password);
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
         user.setResetPasswordToken(null);
         userRepository.save(user);
     }
 
+    //
+//    private void updatePassword(User user, String password) {
+//        String encodedPassword = encoder.encode(password);
+//        user.setPassword(encodedPassword);
+//        user.setResetPasswordToken(null);
+//        userRepository.save(user);
+//    }
+//
     private void updateToken(String token, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Could not find any user with the email: " + email));
         user.setResetPasswordToken(token);
         userRepository.save(user);
     }
+    @Override
+    public Map<String, Object> forgotPassword(HttpServletRequest request) {
+    Map<String, Object> model = new HashMap<>();
+    try {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateToken(token, email);
+
+        model.put("token", token);
+        model.put("message", "Use the token below to reset your password.");
+    } catch (UsernameNotFoundException e) {
+        model.put("error", "User with this email doesn't exist.");
+    }
+    return model;
+}
+@Override
+public Map<String, Object> postResetPassword(HttpServletRequest request) {
+    Map<String, Object> model = new HashMap<>();
+    String token = request.getParameter("token");
+    String password = request.getParameter("password");
+
+
+    if (token == null || token.isEmpty()) {
+        model.put("error", "Invalid token");
+        return model;
+    }
+
+
+    if (password == null || password.isEmpty()) {
+        model.put("error", "Password cannot be empty.");
+        model.put("token", token);
+
+        return model;
+    }
+
+
+    if (password.length() < 8 || password.length() > 20) {
+        model.put("error", "Password must be between 8 and 20 characters.");
+        model.put("token", token);
+
+        return model;
+    }
+
+    try {
+
+        User user = getUserByToken(token);
+        updatePassword(user, password);
+        model.put("message", "Password successfully updated.");
+    } catch (UsernameNotFoundException e) {
+        model.put("error", "Invalid token");
+    }
+    return model;
+}
+
+    public User getUserByToken(String token) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.resetPasswordToken(token);
+
+        if (!userOptional.isPresent()) {
+            throw new UsernameNotFoundException("Invalid token");
+        }
+
+        return userOptional.get();
+    }
+
 
 
 

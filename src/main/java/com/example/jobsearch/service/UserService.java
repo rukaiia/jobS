@@ -4,6 +4,7 @@ import com.example.jobsearch.dto.user.AuthUserDto;
 import com.example.jobsearch.dto.user.EmployeeFindDto;
 import com.example.jobsearch.dto.user.UserAvatarFileDto;
 import com.example.jobsearch.dto.user.UserDto;
+import com.example.jobsearch.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,22 @@ import java.util.Map;
 
 public interface UserService {
 
+
+    User getByToken(String token);
+
+    void updatePassword(User user, String newPassword);
+
     Map<String, Object> forgotPassword(HttpServletRequest request);
 
 
 
-    Map<String, Object> resetPasswordGet(String token);
+//    Map<String, Object> resetPasswordGet(String token);
+//
+//    Map<String, Object> resetPasswordPost(HttpServletRequest request);
 
-    Map<String, Object> resetPasswordPost(HttpServletRequest request);
+//    Map<String, Object> postResetPassword(HttpServletRequest request);
+
+    Map<String, Object> postResetPassword(HttpServletRequest request);
 
     List<UserDto> getUsers();
 
