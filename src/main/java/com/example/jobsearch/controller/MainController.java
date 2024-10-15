@@ -28,10 +28,8 @@ public class MainController {
                               @RequestParam(name = "vacancyPageSize", defaultValue = "5") Integer vacancyPageSize,
                               @RequestParam(name = "filter", defaultValue = "none") String Vcategory,
                               @RequestParam(name = "resumePage", defaultValue = "0") Integer resumePage,
-                              @RequestParam(name = "resumePageSize", defaultValue = "5") Integer resumePageSize,
-                              @RequestParam(name = "filter", defaultValue = "none") String Rcategory,
-                              @RequestParam(name = "userPage", defaultValue = "0") Integer userPage,
-                              @RequestParam(name = "userPageSize", defaultValue = "5") Integer userPageSize)
+                              @RequestParam(name = "resumePageSize", defaultValue = "5") Integer resumePageSize
+                              )
 
     {
 

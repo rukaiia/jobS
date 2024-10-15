@@ -27,11 +27,7 @@ public class EmployeeController {
     private final RespondedApplicantsService respondedApplicantsService;
 
 
-//    @GetMapping("resumes/{id}")
-//    public String getResume(@PathVariable int id, Model model) {
-//        resumeService.getResume(id, model);
-//        return "employee/resume";
-//    }
+
     @GetMapping("resumes/{id}")
             public String getResume(@PathVariable int id, Model model){
         model.addAttribute("resume", resumeService.getResume(id, model));
@@ -81,11 +77,11 @@ public class EmployeeController {
         return "employee/createEducationTemplate";
     }
 
-    @GetMapping("resumes/{resumeId}/vacancy/{vacancyId}")
-    public String getMessenger(@PathVariable int resumeId, @PathVariable int vacancyId, Model model) {
-        RespondMessengerDto messengerDto = respondedApplicantsService.getRespondMessenger(FileUtil.TEST_RESUME_ID, FileUtil.TEST_VACANCY_ID);
-        model.addAttribute("messenger", messengerDto);
-        return "messenger";
-    }
+//    @GetMapping("resumes/{resumeId}/vacancy/{vacancyId}")
+//    public String getMessenger(@PathVariable int resumeId, @PathVariable int vacancyId, Model model) {
+//        RespondMessengerDto messengerDto = respondedApplicantsService.getRespondMessenger(FileUtil.TEST_RESUME_ID, FileUtil.TEST_VACANCY_ID);
+//        model.addAttribute("messenger", messengerDto);
+//        return "messenger";
+//    }
 
 }

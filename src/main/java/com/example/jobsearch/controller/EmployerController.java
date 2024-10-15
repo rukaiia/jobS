@@ -52,7 +52,6 @@ public class EmployerController {
     @GetMapping("resumes/{id}")
     public String getResumeId(@PathVariable int id, Model model) {
         resumeService.getResume(id,model);
-//        model.addAttribute("resume", resumeService.getResumeById(id));
 
         return "employer/resumes";
     }
